@@ -46,7 +46,7 @@ p {
   backdrop-filter: blur(5px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   display: inline-block;
-  font-family: 'Dancing Script', cursive;
+  font-family: 'Pacifico', cursive;
 }
 
 .wish-message.show {
