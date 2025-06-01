@@ -37,22 +37,26 @@
       text-shadow: 0 0 8px rgba(255,255,255,0.6);
     }
 
-    .wish-message {
-      font-size: 1.3em;
-      color: #fff;
-      margin-top: 20px;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-      text-shadow: 0 0 8px rgba(255,255,255,0.6);
-      background: rgba(255, 255, 255, 0.2); /* Màu nền khung với độ trong suốt */
-      padding: 15px 25px; /* Khoảng đệm bên trong khung */
-      border: 2px solid #fff; /* Viền khung */
-      border-radius: 15px; /* Bo góc khung */
-      backdrop-filter: blur(5px); /* Hiệu ứng mờ nền */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ */
-      display: inline-block; /* Khung chỉ rộng bằng nội dung */
-    }
+ .wish-message {
+  font-size: 1.3em;
+  color: #fff;
+  margin-top: 20px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  text-shadow: 0 0 8px rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15px 25px;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+
+  /* Thêm dòng dưới đây để đổi font */
+  font-family: 'Dancing Script', cursive;
+}
+
 
     .wish-message.show {
       opacity: 1;
@@ -77,15 +81,20 @@
       animation: float 10s infinite ease-in-out;
     }
 
-    .balloon::before {
-      content: '';
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      width: 2px; height: 20px;
-      background: #fff;
-      transform: translateX(-50%);
-    }
+  .balloon::before {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: #fff;
+
+  /* Sử dụng gió để xoay dây */
+  transform: translateX(-50%) rotate(calc(var(--wind) * 0.3deg));
+  transform-origin: top;
+}
+
 
     .confetti {
       width: 10px; height: 10px;
@@ -286,12 +295,11 @@
     const giftBox = document.getElementById('giftBox');
 
     const wishes = [
-      "Chúc các bé luôn vui vẻ, khỏe mạnh và học giỏi!",
-      "Mong các bé có một ngày 1/6 đầy ắp tiếng cười!",
-      "Chúc các thiên thần nhỏ luôn hạnh phúc và rạng rỡ!",
+      "Chúc em mình học giỏi",
+      "Mong em mình có một ngày 1/6 đầy ắp tiếng cười!",
+      "Chúc em mình thiên thần nhỏ luôn hạnh phúc và rạng rỡ!",
       "Hãy luôn mỉm cười và tỏa sáng như những ngôi sao nhé!",
-      "Chúc các bé yêu một ngày thật nhiều niềm vui và kẹo ngọt!",
-      "Mong các bé lớn lên với những ước mơ bay cao, bay xa!"
+      "Mong em mình lớn lên với những ước mơ bay cao, bay xa!"
     ];
 
     function randomColor() {
@@ -324,27 +332,45 @@
       }
     }
 
+    setInterval(() => createFloatingElement('balloon', 1, balloonsContainer), 2000);
+
+// Giảm số bóng bay emoji lớn xuống 1 quả mỗi 2 giây (thay vì mỗi 800ms)
+setInterval(createBalloon, 2000);
+
     function triggerGiftEffect() {
-      // Lắc hộp quà
       giftBox.classList.add('shake');
       setTimeout(() => giftBox.classList.remove('shake'), 500);
 
-      // Hiển thị lời chúc
       const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
       wishMessage.textContent = randomWish;
       wishMessage.classList.add('show');
 
-      // Tạo hiệu ứng: bóng bay, pháo hoa, sao sáng, bong bóng
-      createFloatingElement('balloon', 10, balloonsContainer);
-      createFloatingElement('confetti', 20, effectsContainer);
-      createFloatingElement('firework', 20, effectsContainer);
-      createFloatingElement('star', 20, effectsContainer);
-      createFloatingElement('bubble', 15, effectsContainer);
+      createFloatingElement('balloon', 3, balloonsContainer);
+      createFloatingElement('confetti', 30, effectsContainer);
+      createFloatingElement('firework', 40, effectsContainer);
+      createFloatingElement('star', 30, effectsContainer);
+      createFloatingElement('bubble', 20, effectsContainer);
       createFloatingElement('gift-particle', 10, effectsContainer);
     }
 
-    // Tạo bóng bay mặc định bay lên (trang thái nền)
     setInterval(() => createFloatingElement('balloon', 1, balloonsContainer), 1000);
+
+  function createBalloon() {
+  const emojiList = ['💖', '⭐', '⛄', '🎄', '✨', '🎁', '🎉', '🎊', '🕯️', '🍬', '🍭'];
+  const balloon = document.createElement('div');
+  balloon.classList.add('balloon');
+  balloon.style.left = `${Math.random() * 100}%`;
+  balloon.style.setProperty('--wind', `${(Math.random() - 0.5) * 200}px`);
+  balloon.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
+  balloon.style.fontSize = '2.5em';
+  balloon.style.color = '#fff';
+  balloon.style.textAlign = 'center';
+  balloon.style.lineHeight = '70px';
+  balloonsContainer.appendChild(balloon);
+
+  setTimeout(() => balloon.remove(), 10000);
+}
+  setInterval(createBalloon, 800);
   </script>
 </body>
 </html>
